@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> _userManager
+@inject SignInManager<User> _signInManager
+@inject ApplicationContext _db
+<ul class="navbar-nav">
+    @if(User.Identity.IsAuthenticated)
+    {
+        var currentUser = await _userManager.GetUserAsync(User);
+        var userLotsCount = _db.Lots.Count(i => i.UserId == currentUser.Id);
+        <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Мой аккаунт
+                </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="#">Настроить профиль</a>
+                <a class="dropdown-item" asp-controller="Lot" asp-action="UserLots">
+                    Мои лоты
+                    <span class="btn btn-sm btn-danger" style="width: max-content;">
+                        @userLotsCount
+                    </span>
+                </a>
+                <a class="dropdown-item" asp-controller="Lot" asp-action="SetLotsToBuy">
+                    Лоты, ожидающие оплаты
+                    <span class="btn btn-sm btn-danger" style="width: max-content;">
+                        @currentUser.LotsToBuy.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList().Count
+                    </span>
+                </a>
+            </div>
+              </li>
+     
+        <li class="nav-item">
+            <form method="post" asp-controller="Account" asp-action="Logout">
+                <input class="btn btn-sm btn-danger" type="submit" value="Выход" />
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a style="margin-right: 5px" class="btn btn-sm btn-primary" asp-controller="Account" asp-action="Login">Вход</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-sm btn-primary" asp-controller="Account" asp-action="Register">Регистрация</a>
+        </li>
+    }
+</ul>
+

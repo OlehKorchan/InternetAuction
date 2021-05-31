@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model InternetAuction.Models.Lot
+@inject UserManager<User> _userManager
+@{
+    ViewBag.Title = "Страница лота";
+    Layout = "_Layout";
+    var currentUser = await _userManager.GetUserAsync(User);
+    string imgSrc = "#";
+    if (Model.Img != null)
+    {
+        var base64 = Convert.ToBase64String(Model.Img);
+        imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+    }
+}
+<h6>Конец торгов по лоту: @Model.FinishDate.ToString("G")</h6>
+<img style="width: 300px; height: 300px" src="@imgSrc" class="rounded-float-left" alt="Картинка отсутствует"/>
+<br/>
+<h4>Название лота:</h4>
+<p style="font-size: 36px; font-weight: bold">@Model.Name</p>
+<br/>
+<h4>Описание лота:</h4>
+<p>@Html.Raw(Model.Desc)</p>
+<br/>
+<h4>Стартовая цена:</h4>
+<p class="form-control" style="width: max-content">@Model.StartValue</p>
+<br/>
+<h4>Текущая цена:</h4>
+<p class="form-control" style="width: max-content">@Model.CurrentValue</p>
+<br/>
+<h4>Минимальное повышение ставки:</h4>
+<p class="form-control" style="width: max-content">@Model.MinUpgradeBet</p>
+<br/>
+@if (Model.FinishDate > DateTime.Now)
+{
+    <form asp-controller="Lot" asp-action="UpgradeValue" asp-route-id="@Model.Id">
+        <input required class="form-control" style="width: 169px" name="newBet" type="number" min="@(Model.CurrentValue + Model.MinUpgradeBet)" max="@Int32.MaxValue" value="@(Model.CurrentValue + Model.MinUpgradeBet)">
+        <input style="display: none" type="text" name="buyerId" value="@currentUser.Id">
+        <input type="submit" class="btn btn-sm btn-secondary mb-2 mt-3" value="Сделать ставку">
+    </form>
+}

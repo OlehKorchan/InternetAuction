@@ -2,6 +2,26 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <UserSecretsId>0ce31995-6f15-4cce-97ad-39f88d6c3e8a</UserSecretsId>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0-preview.4.21253.5" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-preview.4.21253.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Roles\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Roles\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Roles\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Roles\UserList.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Users\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Users\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Users\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Pages" />
+    </ItemGroup>
 
 </Project>

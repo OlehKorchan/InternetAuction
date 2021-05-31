@@ -6,21 +6,32 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using InternetAuction.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace InternetAuction.Controllers
 {
+    /// <summary>
+    /// Контроллер домашней страницы.
+    /// Содержит методы отображения главной страницы и страницы ошибок.
+    /// </summary>
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly ApplicationContext _db;
+        /// <summary>
+        /// Контроллер домашней страницы.
+        /// Содержит методы отображения главной страницы и страницы ошибок.
+        /// </summary>
+        public HomeController(ILogger<HomeController> logger, ApplicationContext db)
         {
+            _db = db;
             _logger = logger;
+            
         }
-
+        
         public IActionResult Index()
         {
-            return View();
+            return View(_db.Lots.Where(i => i.FinishDate >= DateTime.Now).ToList());
         }
 
         public IActionResult Privacy()

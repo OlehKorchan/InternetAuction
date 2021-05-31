@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<InternetAuction.Models.Lot>
+
 @{
-    ViewData["Title"] = "Home Page";
+    ViewBag.Title = "Лоты к оплате";
     Layout = "_Layout";
-    
 }
 
-<h2>Все лоты</h2>
+<h2>Ваши лоты, ожидающие оплаты</h2>
 <table class="table">
     @foreach (var lot in Model)
     {
@@ -25,13 +25,13 @@
                         <span style="float: right; font-weight: bold; font-size: 24px" class="mr-3 ml-3 md-3 mt-3">$@lot.CurrentValue</span>
                     </div>
             </td>
-            @*<td>
-                <form asp-action="Delete" asp-route-id="@role.Id" method="post">
-                    <button type="submit" class="btn btn-sm btn-danger">
-                        Удалить
+            <td>
+                <form>
+                    <button type="submit" class="btn btn-sm btn-success">
+                        Оплатить (оплата еще не реализована)
                     </button>
                 </form>
-            </td>*@
+            </td>
         </tr>
     }
 </table>

@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model InternetAuction.Models.Lot
+@inject UserManager<User> _userManager
+@inject SignInManager<User> _signInManager
+
+@{
+    ViewBag.Title = "Создание лота";
+    Layout = "_Layout";
+	var currentUser = await _userManager.GetUserAsync(User);
+}
+<form method="post" asp-controller="Lot" asp-action="Add" enctype="multipart/form-data" name="form">
+	<div class="validation" asp-validation-summary="ModelOnly"></div>
+	<div class="form-group mb-3">
+		<label class="form-label d-flex" for="image">Выберите картинку для лота</label>
+		<input accept="image/*" class="form-control mb-3" style="width: 300px" type="file" name="image" id="image" onchange="document.getElementById('preview').src = window.URL.createObjectURL(this.files[0])"/>
+		<img class="img-fluid" width="300px" height="300px" id="preview" alt="Ваша картинка"/>
+	</div>
+	<div class="form-group mb-3">
+		<input style="display: none" asp-for="UserId" value="@currentUser.Id">
+		<label for="Name" class="form-label d-flex">Название лота:</label>
+		<input style="width: 300px" class="form-control" id="Name" placeholder="Например: кольцо 10го века" asp-for="Name">
+		<span asp-validation-for="Name" class="text-danger"></span>
+	</div>
+	<div class="form-group mb-3">
+		<label for="Desc" class="form-label d-flex">Описание:</label>
+		<textarea class="form-control" style="width: 500px" id="Desc" asp-for="Desc" placeholder="Придумайте описание лоту"></textarea>
+		<span asp-validation-for="Desc" class="text-danger"></span>
+	</div>
+	<div class="form-group mb-3">
+		<label for="Value" class="form-label d-flex">Стартовая цена:</label>
+		<input class="form-control" style="width: 100px" id="Value" asp-for="StartValue"/>
+		<span asp-validation-for="StartValue" class="text-danger"></span>
+	</div>
+	<div class="form-group mb-3">
+		<label for="Upgrade" class="form-label d-flex">Минимальное повышение:</label>
+		<input class="form-control" style="width: 100px" id="Upgrade" asp-for="MinUpgradeBet"/>
+		<span asp-validation-for="MinUpgradeBet" class="text-danger"></span>
+	</div>
+	<div class="form-group mb-3">
+		<input style="display: none;" class="form-control" asp-for="StartDate" value="@DateTime.Now.ToString("yyyy-MM-ddThh:mm")">
+		<label for="finishDate" class="form-label d-flex">Дата окончания торгов:</label>
+		<input class="form-control" style="width: 220px" id="finishDate" asp-for="FinishDate">
+		<span asp-validation-for="FinishDate" class="text-danger"></span>
+	</div>
+	<input type="submit" class="btn btn-sm btn-secondary mb-2 mt-3" value="Добавить" />
+</form>
+@section Scripts {
+	<partial name="_ValidationScriptsPartial"/>
+}

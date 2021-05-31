@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model InternetAuction.Models.Lot
+@{
+    ViewBag.Title = "Редактирование лота";
+    Layout = "_Layout";
+	string imgSrc = "#";
+	if (Model.Img != null)
+	{
+		var base64 = Convert.ToBase64String(Model.Img);
+		imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+	}
+}
+
+<h2>Внесите изменения и нажмите "Сохранить"</h2>
+<form method="post" asp-antiforgery="true" asp-controller="Lot" asp-action="Edit" enctype="multipart/form-data">
+	<div class="validation" asp-validation-summary="ModelOnly"></div>
+	<div class="form-group mb-3">
+		<label class="form-label d-flex" for="image">Выберите картинку для лота</label>
+		<input accept="image/*" class="form-control mb-3" style="width: 300px" type="file" name="image" id="image" onchange="document.getElementById('preview').src = window.URL.createObjectURL(this.files[0])"/>
+		<img class="img-fluid" width="300px" height="300px" src="@imgSrc" id="preview" alt="Ваша картинка"/>
+	</div>
+	<div class="form-group mb-3">
+		<input style="display: none" asp-for="UserId">
+		<input style="display: none" asp-for="BuyerId">
+		<input style="display: none" asp-for="Sold">
+		<input style="display: none" asp-for="CurrentValue">
+		<input style="display: none;" class="form-control" asp-for="StartDate" value="@Model.StartDate.ToString("yyyy-MM-ddThh:mm")">
+		<input style="display:none;" asp-for="Id">
+		<input style="display: none" asp-for="StartValue">
+		<label for="Name" class="form-label d-flex">Название лота:</label>
+		<input style="width: 300px" class="form-control" id="Name" placeholder="Например: кольцо 10го века" asp-for="Name">
+		<span asp-validation-for="Name" class="text-danger"></span>
+	</div>
+	<div class="form-group mb-3">
+		<label for="Desc" class="form-label d-flex">Описание:</label>
+		<textarea class="form-control" style="width: 500px" id="Desc" asp-for="Desc" placeholder="Придумайте описание лоту"></textarea>
+		<span asp-validation-for="Desc" class="text-danger"></span>
+	</div>
+	<div class="form-group mb-3">
+		<label for="Upgrade" class="form-label d-flex">Минимальное повышение:</label>
+		<input class="form-control" style="width: 100px" id="Upgrade" asp-for="MinUpgradeBet"/>
+		<span asp-validation-for="MinUpgradeBet" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label for="finishDate">Дата окончания торгов:</label>
+		<input class="form-control" id="finishDate" asp-for="FinishDate">
+		<span asp-validation-for="FinishDate" class="text-danger"></span>
+	</div>
+	<input type="submit" class="btn btn-sm btn-secondary mb-2 mt-3" value="Сохранить" />
+</form>
+@section Scripts {
+	<partial name="_ValidationScriptsPartial"/>
+}
