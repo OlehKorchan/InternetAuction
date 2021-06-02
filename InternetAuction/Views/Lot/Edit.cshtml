@@ -3,12 +3,6 @@
 @{
     ViewBag.Title = "Редактирование лота";
     Layout = "_Layout";
-	string imgSrc = "#";
-	if (Model.Img != null)
-	{
-		var base64 = Convert.ToBase64String(Model.Img);
-		imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-	}
 }
 
 <h2>Внесите изменения и нажмите "Сохранить"</h2>
@@ -17,7 +11,7 @@
 	<div class="form-group mb-3">
 		<label class="form-label d-flex" for="image">Выберите картинку для лота</label>
 		<input accept="image/*" class="form-control mb-3" style="width: 300px" type="file" name="image" id="image" onchange="document.getElementById('preview').src = window.URL.createObjectURL(this.files[0])"/>
-		<img class="img-fluid" width="300px" height="300px" src="@imgSrc" id="preview" alt="Ваша картинка"/>
+		<img class="img-fluid" width="300px" height="300px" src="@("/images/" + Model.Img)" id="preview" alt="Ваша картинка"/>
 	</div>
 	<div class="form-group mb-3">
 		<input style="display: none" asp-for="UserId">

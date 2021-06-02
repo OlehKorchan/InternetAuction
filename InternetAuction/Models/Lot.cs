@@ -20,16 +20,14 @@ namespace InternetAuction.Models
         public string UserId { get; set; }
         public string BuyerId { get; set; }
         [Required(ErrorMessage = "Укажите стартовую цену лота!")]
-        [DataType(DataType.Currency, ErrorMessage = "Укажите число!")]
         public int StartValue { get; set; }
         public int CurrentValue { get; set; }
         [Required(ErrorMessage = "Укажите минимальное повышение ставки!")]
-        [DataType(DataType.Currency, ErrorMessage = "Укажите число!")]
         public int MinUpgradeBet { get; set; }
-        public byte[] Img { get; set; }
+        public string Img { get; set; }
         public DateTime StartDate { get; set; }
         [Required(ErrorMessage = "Укажите дату окончания торгов!")]
-        [Remote(action: "CheckLotDate", controller: "Lot", ErrorMessage ="Недопустимая дата окончания торгов")]
+        [Remote(action: "CheckLotDate", controller: "Lot", ErrorMessage ="Дата должна быть больше текущей")]
         public DateTime FinishDate { get; set; }
     }
 }

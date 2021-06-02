@@ -1,14 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
+using ImageMagick;
 using InternetAuction.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace InternetAuction.Controllers
 {
@@ -17,10 +22,12 @@ namespace InternetAuction.Controllers
     {
         private readonly ApplicationContext _db;
         private readonly UserManager<User> _userManager;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public LotController(ApplicationContext db, UserManager<User> userManager)
+        public LotController(ApplicationContext db, UserManager<User> userManager, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
         }
 
@@ -65,19 +72,14 @@ namespace InternetAuction.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(Lot lot, IFormFile image)
         {
-            if (image is {Length: > 0})
+            if (image != null)
             {
-                byte[] item;
-                await using (var fileStream = image.OpenReadStream())
-                await using (var memoryStream = new MemoryStream())
-                {
-                    await fileStream.CopyToAsync(memoryStream);
-                    item = memoryStream.ToArray();
-                }
-
-                lot.Img = item;
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                string uniqueFileName = Guid.NewGuid() + "_" + image.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                await image.CopyToAsync(new FileStream(filePath, FileMode.Create));
+                lot.Img = uniqueFileName;
             }
-
             lot.CurrentValue = lot.StartValue;
             _db.Lots.Add(lot);
             await _db.SaveChangesAsync();
@@ -100,17 +102,13 @@ namespace InternetAuction.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Lot lot, IFormFile image)
         {
-            if (image is {Length: > 0})
+            if (image != null)
             {
-                byte[] item;
-                await using (var fileStream = image.OpenReadStream())
-                await using (var memoryStream = new MemoryStream())
-                {
-                    await fileStream.CopyToAsync(memoryStream);
-                    item = memoryStream.ToArray();
-                }
-
-                lot.Img = item;
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                await image.CopyToAsync(new FileStream(filePath, FileMode.Create));
+                lot.Img = filePath;
             }
             _db.Lots.Update(lot);
             await _db.SaveChangesAsync();

@@ -28,7 +28,7 @@
 	</div>
 	<div class="form-group mb-3">
 		<label for="Value" class="form-label d-flex">Стартовая цена:</label>
-		<input class="form-control" style="width: 100px" id="Value" asp-for="StartValue"/>
+		<input class="form-control" style="width: 100px" id="Value" min="" asp-for="StartValue"/>
 		<span asp-validation-for="StartValue" class="text-danger"></span>
 	</div>
 	<div class="form-group mb-3">
@@ -39,7 +39,7 @@
 	<div class="form-group mb-3">
 		<input style="display: none;" class="form-control" asp-for="StartDate" value="@DateTime.Now.ToString("yyyy-MM-ddThh:mm")">
 		<label for="finishDate" class="form-label d-flex">Дата окончания торгов:</label>
-		<input class="form-control" style="width: 220px" id="finishDate" asp-for="FinishDate">
+		<input class="form-control" style="width: 220px" id="finishDate" min="@(DateTime.Now.AddHours(1).ToString("yyyy-MM-ddThh:mm"))" max="@(DateTime.Now.AddDays(30).ToString("yyyy-MM-ddThh:mm"))" asp-for="FinishDate">
 		<span asp-validation-for="FinishDate" class="text-danger"></span>
 	</div>
 	<input type="submit" class="btn btn-sm btn-secondary mb-2 mt-3" value="Добавить" />
